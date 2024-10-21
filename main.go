@@ -132,11 +132,9 @@ func drawGameover() {
 	miniten.DrawImageFS(fsys, "bg.png", 0, 0)
 	miniten.DrawImageFS(fsys, "gopher.png", int(x), int(y))
 	for i := range wallXs {
-		// 上の壁の描画
 		wallX := wallXs[i]
 		holeY := holeYs[i]
 		miniten.DrawImageFS(fsys, "wall.png", wallX, holeY-wallHeight)
-		// 下の壁の描画
 		miniten.DrawImageFS(fsys, "wall.png", wallX, holeY+holeHeight)
 	}
 
