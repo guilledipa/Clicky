@@ -23,7 +23,7 @@ var (
 	frames     int
 	interval   = 144
 	wallStartX = 640
-	walls      = []wall{}
+	walls      = []*wall{}
 	wallWidth  = 20
 	wallHeight = 360
 	holeYMax   = 150
@@ -84,11 +84,11 @@ func drawGame() {
 
 	frames++
 	if frames%interval == 0 {
-		wall := wall{wallStartX, rand.N(holeYMax)}
+		wall := &wall{wallStartX, rand.N(holeYMax)}
 		walls = append(walls, wall)
 	}
-	for i := range walls {
-		walls[i].wallX -= 2
+	for _, wall := range walls {
+		wall.wallX -= 2
 	}
 	for _, wall := range walls {
 		drawWalls(wall)
@@ -141,12 +141,12 @@ func drawGameover() {
 		y = 150.0
 		vy = 0.0
 		frames = 0
-		walls = []wall{}
+		walls = []*wall{}
 		score = 0
 	}
 }
 
-func drawWalls(wall wall) {
+func drawWalls(wall *wall) {
 	miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY-wallHeight)
 	miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY+holeHeight)
 }
