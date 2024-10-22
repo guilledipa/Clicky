@@ -23,10 +23,9 @@ var (
 	frames     = 0
 	interval   = 144
 	wallStartX = 640
-	wallXs     = []int{}
+	walls      = []wall{}
 	wallWidth  = 20
 	wallHeight = 360
-	holeYs     = []int{}
 	holeYMax   = 150
 	holeHeight = 170
 	// Gopher
@@ -36,6 +35,11 @@ var (
 	isPrevClicked = false
 	isJustClicked = false
 )
+
+type wall struct {
+	wallX int
+	holeY int
+}
 
 func main() {
 	miniten.Run(draw)
@@ -65,8 +69,8 @@ func drawTitle() {
 
 func drawGame() {
 	miniten.DrawImageFS(fsys, "bg.png", 0, 0)
-	for i, wallX := range wallXs {
-		if wallX < int(x) {
+	for i, wall := range walls {
+		if wall.wallX < int(x) {
 			score = i + 1
 		}
 	}
@@ -80,38 +84,35 @@ func drawGame() {
 
 	frames++
 	if frames%interval == 0 {
-		wallXs = append(wallXs, wallStartX)
-		holeYs = append(holeYs, rand.N(holeYMax))
+		wall := wall{wallStartX, rand.N(holeYMax)}
+		walls = append(walls, wall)
 	}
-	for i := range wallXs {
-		wallXs[i] -= 2
+	for i := range walls {
+		walls[i].wallX -= 2
 	}
-	for i := range wallXs {
-		wallX := wallXs[i]
-		holeY := holeYs[i]
-		miniten.DrawImageFS(fsys, "wall.png", wallX, holeY-wallHeight)
-		miniten.DrawImageFS(fsys, "wall.png", wallX, holeY+holeHeight)
-
+	for _, wall := range walls {
+		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY-wallHeight)
+		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY+holeHeight)
 		// gopher
 		aLeft := int(x)
 		aTop := int(y)
 		aRight := int(x) + gopherWidth
 		aBottom := int(y) + gopherHeight
 		// Colisiones
-		bLeft := wallX
-		bTop := holeY - wallHeight
-		bRight := wallX + wallWidth
-		bBottom := holeY
+		bLeft := wall.wallX
+		bTop := wall.holeY - wallHeight
+		bRight := wall.wallX + wallWidth
+		bBottom := wall.holeY
 		if aLeft < bRight &&
 			bLeft < aRight &&
 			aTop < bBottom &&
 			bTop < aBottom {
 			scene = "gameover"
 		}
-		bLeft = wallX
-		bTop = holeY + holeHeight
-		bRight = wallX + wallWidth
-		bBottom = holeY + holeHeight + wallHeight
+		bLeft = wall.wallX
+		bTop = wall.holeY + holeHeight
+		bRight = wall.wallX + wallWidth
+		bBottom = wall.holeY + holeHeight + wallHeight
 		if aLeft < bRight &&
 			bLeft < aRight &&
 			aTop < bBottom &&
@@ -131,11 +132,9 @@ func drawGame() {
 func drawGameover() {
 	miniten.DrawImageFS(fsys, "bg.png", 0, 0)
 	miniten.DrawImageFS(fsys, "gopher.png", int(x), int(y))
-	for i := range wallXs {
-		wallX := wallXs[i]
-		holeY := holeYs[i]
-		miniten.DrawImageFS(fsys, "wall.png", wallX, holeY-wallHeight)
-		miniten.DrawImageFS(fsys, "wall.png", wallX, holeY+holeHeight)
+	for _, wall := range walls {
+		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY-wallHeight)
+		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY+holeHeight)
 	}
 
 	miniten.Println("Game Over")
@@ -147,8 +146,7 @@ func drawGameover() {
 		y = 150.0
 		vy = 0.0
 		frames = 0
-		wallXs = []int{}
-		holeYs = []int{}
+		walls = []wall{}
 		score = 0
 	}
 }
