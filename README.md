@@ -3,7 +3,7 @@
 Este juego es similar al
 [Flappy Bird](https://en.wikipedia.org/wiki/Flappy_Bird).
 
-Mi objetivo es simplemente probar https://github.com/eihigh/miniten
+Mi objetivo es simplemente probar <https://github.com/eihigh/miniten>
 
 Instrucciones:
 
@@ -12,4 +12,4 @@ Instrucciones:
 1. Intentá sobrevivir lo máximo que puedas sin tocar ningun obstáculo, inclusive
    el techo y el piso.
 
-Jugálo en linea en: https://guilledipa.github.io/Clicky
+Jugálo en linea en: <https://guilledipa.github.io/Clicky>
