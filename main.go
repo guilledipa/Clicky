@@ -56,7 +56,7 @@ func draw() {
 
 func drawTitle() {
 	miniten.DrawImageFS(fsys, "bg.png", 0, 0)
-	miniten.Println("クリックしてスタート")
+	miniten.Println("Gopher Clicky game!")
 	miniten.DrawImageFS(fsys, "gopher.png", int(x), int(y))
 	if isJustClicked {
 		scene = "game"
