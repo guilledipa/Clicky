@@ -91,38 +91,34 @@ func drawGame() {
 		walls[i].wallX -= 2
 	}
 	for _, wall := range walls {
-		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY-wallHeight)
-		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY+holeHeight)
+		drawWalls(wall)
 		// gopher
 		aLeft := int(x)
 		aTop := int(y)
 		aRight := int(x) + gopherWidth
 		aBottom := int(y) + gopherHeight
 		// Colisiones
+		// Top
 		bLeft := wall.wallX
 		bTop := wall.holeY - wallHeight
 		bRight := wall.wallX + wallWidth
 		bBottom := wall.holeY
-		if aLeft < bRight &&
-			bLeft < aRight &&
-			aTop < bBottom &&
-			bTop < aBottom {
+		if hitTestRects(aLeft, aTop, aRight, aBottom, bLeft, bTop, bRight, bBottom) {
 			scene = "gameover"
 		}
+		// Bot
 		bLeft = wall.wallX
 		bTop = wall.holeY + holeHeight
 		bRight = wall.wallX + wallWidth
 		bBottom = wall.holeY + holeHeight + wallHeight
-		if aLeft < bRight &&
-			bLeft < aRight &&
-			aTop < bBottom &&
-			bTop < aBottom {
+		if hitTestRects(aLeft, aTop, aRight, aBottom, bLeft, bTop, bRight, bBottom) {
 			scene = "gameover"
 		}
 		// Ceiling
 		if y < 0 {
 			scene = "gameover"
 		}
+		// Floor
 		if 360 < y { // +float64(gopherHeight) .. Too brutal :P
 			scene = "gameover"
 		}
@@ -133,8 +129,7 @@ func drawGameover() {
 	miniten.DrawImageFS(fsys, "bg.png", 0, 0)
 	miniten.DrawImageFS(fsys, "gopher.png", int(x), int(y))
 	for _, wall := range walls {
-		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY-wallHeight)
-		miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY+holeHeight)
+		drawWalls(wall)
 	}
 
 	miniten.Println("Game Over")
@@ -149,4 +144,16 @@ func drawGameover() {
 		walls = []wall{}
 		score = 0
 	}
+}
+
+func drawWalls(wall wall) {
+	miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY-wallHeight)
+	miniten.DrawImageFS(fsys, "wall.png", wall.wallX, wall.holeY+holeHeight)
+}
+
+func hitTestRects(aLeft, aTop, aRight, aBottom, bLeft, bTop, bRight, bBottom int) bool {
+	return aLeft < bRight &&
+		bLeft < aRight &&
+		aTop < bBottom &&
+		bTop < aBottom
 }
