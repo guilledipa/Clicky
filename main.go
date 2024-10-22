@@ -20,7 +20,7 @@ var (
 	g     = 0.1 // Gravity
 	jump  = -4.0
 	// Wall
-	frames     = 0
+	frames     int
 	interval   = 144
 	wallStartX = 640
 	walls      = []wall{}
@@ -32,8 +32,8 @@ var (
 	gopherWidth  = 60
 	gopherHeight = 75
 
-	isPrevClicked = false
-	isJustClicked = false
+	isPrevClicked bool
+	isJustClicked bool
 )
 
 type wall struct {
